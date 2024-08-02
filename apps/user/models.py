@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 
-from apps.api.utils.fields import PhoneNumberField
+from apps.api.fields import PhoneNumberField
 
 
 class User(AbstractUser):

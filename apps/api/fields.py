@@ -1,7 +1,7 @@
 from django.core import validators
 from django.db import models
 
-from apps.api.utils.validators import iranian_phone_number_validator
+from apps.api.validators import iranian_phone_number_validator
 
 
 class PhoneNumberField(models.CharField):
