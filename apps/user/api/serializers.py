@@ -30,3 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_tokens(self, obj):
         return generate_token(obj)
+
+
+class UserLoginSerializer(PhoneNumberSerializer):
+    password = serializers.CharField()

@@ -2,10 +2,11 @@ from django.contrib.auth import get_user_model
 from rest_framework.reverse import reverse
 
 from apps.api.response import custom_response
-from apps.api.statuses import OTP_EXPIRED_400, CREATED_201, UNAUTHORIZED_401
+from apps.api.statuses import OTP_EXPIRED_400, CREATED_201, UNAUTHORIZED_401, LOGIN_FAILED_403, OK_200
 from apps.api.utils import otp_send, otp_check, generate_token
 from apps.api.views import BaseAPIView
-from apps.user.api.serializers import PhoneNumberSerializer, OtpVerifySerializer, UserRegisterSerializer, UserSerializer
+from apps.user.api.serializers import PhoneNumberSerializer, OtpVerifySerializer, UserRegisterSerializer, \
+    UserSerializer, UserLoginSerializer
 
 User = get_user_model()
 
@@ -40,7 +41,21 @@ class UserOTPVerifyApi(BaseAPIView):
 
 
 class UserLoginApi(BaseAPIView):
-    ...
+    serializer_class = UserLoginSerializer
+
+    def post(self, request):
+        serializer, validated_data = self.data_validation()
+        phone_number = validated_data['phone_number']
+
+        try:
+            user = User.objects.get(phone_number=phone_number)
+        except User.DoesNotExist:
+            return custom_response(status_code=LOGIN_FAILED_403)
+
+        if not user.check_password(validated_data['password']):
+            return custom_response(status_code=LOGIN_FAILED_403)
+
+        return custom_response(data=UserSerializer(user).data, status_code=OK_200)
 
 
 class UserRegisterApi(BaseAPIView):
