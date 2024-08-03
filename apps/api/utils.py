@@ -24,6 +24,9 @@ def otp_check(phone_number: str, otp: str) -> bool:
 
 
 def generate_token(user: User) -> dict:
+    """
+    Generates and returns a dictionary with JWT access and refresh tokens for an authenticated user.
+    """
     if user.is_authenticated:
         refresh = RefreshToken.for_user(user)
     else:

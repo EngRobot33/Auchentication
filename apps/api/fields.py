@@ -1,7 +1,7 @@
 from django.core import validators
 from django.db import models
 
-from apps.api.validators import iranian_phone_number_validator
+from apps.api.validators import IranianPhoneNumberValidator
 
 
 class PhoneNumberField(models.CharField):
@@ -11,11 +11,12 @@ class PhoneNumberField(models.CharField):
         self.verbose_name = "phone number"
         self._unique = True
         self.max_length = 13
-        self.validators.append(validators.MaxLengthValidator(13))
-        self.validators.append(iranian_phone_number_validator)
+        self.validators.append(IranianPhoneNumberValidator())
 
     def to_python(self, value):
         value = super(PhoneNumberField, self).to_python(value)
         if value and value.startswith('+98'):
             value = '0' + value[3:]
+        elif value.startswith('98'):
+            value = '0' + value[2:]
         return value

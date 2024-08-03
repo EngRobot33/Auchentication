@@ -1,19 +1,23 @@
-import re
+from django.core.validators import RegexValidator
+from django.utils.deconstruct import deconstructible
 
-from django.core.exceptions import ValidationError
 
+@deconstructible
+class IranianPhoneNumberValidator(RegexValidator):
+    regex = r'^(?:0|98|\+98)?(9\d{9})$'
+    message = "Phone number must be an Iranian phone number."
+    code = "invalid"
 
-def iranian_phone_number_validator(value):
-    """
-    Checks if the provided phone number matches the Iranian phone number format.
-    """
-    iranian_pattern = re.compile(r'^(0|\+98)9\d{9}$')
+    def __init__(self, regex=None, message=None, code=None, inverse_match=None, flags=None):
+        super().__init__(regex=self.regex, message=message, code=code, inverse_match=inverse_match, flags=flags)
 
-    if not iranian_pattern.match(value):
-        raise ValidationError('Phone number must be an Iranian phone number.')
+    def __call__(self, value):
+        super().__call__(value)
 
-    # Convert +98 to 0
-    if value.startswith('+98'):
-        value = '0' + value[3:]
+        # Convert +98 or 98 to 0
+        if value.startswith('+98'):
+            value = '0' + value[3:]
+        elif value.startswith('98'):
+            value = '0' + value[2:]
 
-    return value
+        return value
