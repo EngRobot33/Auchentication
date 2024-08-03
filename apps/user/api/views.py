@@ -2,10 +2,10 @@ from django.contrib.auth import get_user_model
 from rest_framework.reverse import reverse
 
 from apps.api.response import custom_response
-from apps.api.statuses import OTP_EXPIRED_400, CREATED_201
+from apps.api.statuses import OTP_EXPIRED_400, CREATED_201, UNAUTHORIZED_401
 from apps.api.utils import otp_send, otp_check, generate_token
 from apps.api.views import BaseAPIView
-from apps.user.api.serializers import PhoneNumberSerializer, OtpVerifySerializer
+from apps.user.api.serializers import PhoneNumberSerializer, OtpVerifySerializer, UserRegisterSerializer, UserSerializer
 
 User = get_user_model()
 
@@ -44,4 +44,20 @@ class UserLoginApi(BaseAPIView):
 
 
 class UserRegisterApi(BaseAPIView):
-    ...
+    serializer_class = UserRegisterSerializer
+
+    def post(self, request):
+        serializer, validated_data = self.data_validation()
+
+        if not self.request.auth:
+            return custom_response(status_code=UNAUTHORIZED_401)
+
+        user = self.request.user
+        user.first_name = validated_data['first_name']
+        user.last_name = validated_data['last_name']
+        user.email = validated_data['email']
+        user.set_password(validated_data['password'])
+
+        user.save(update_fields=['first_name', 'last_name', 'email', 'password'])
+
+        return custom_response(data=UserSerializer(user).data, status_code=CREATED_201)
