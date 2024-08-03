@@ -121,7 +121,6 @@ CACHES = {
 }
 
 OTP_EXPIRE_TIME: int = int(os.environ.get('OTP_EXPIRE_TIME', 3600))
-CACHE_KEY_PREFIX: str = os.environ.get('CACHE_KEY_PREFIX', 'user_attempts')
 
 MAX_ATTEMPT_NUMBER: int = 3
 BLOCK_DURATION: int = 3600
