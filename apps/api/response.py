@@ -7,7 +7,7 @@ def custom_response(status_code: dict = OK_200, data: dict or list = None, error
     return Response(
         data={
             'detail': status_code.get('detail'),
-            'code': status_code.get('code', status_code.get('detail').replace(' ', '_')),
+            'code': status_code.get('number', status_code.get('detail').replace(' ', '_')),
             'error': error,
             'data': data if data else {}
         },
