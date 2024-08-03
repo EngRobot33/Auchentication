@@ -24,6 +24,8 @@ DJANGO_APPS = [
 
 THIRD_PARTY_PACKAGES = [
     'rest_framework',
+    'rest_framework_swagger',
+    'drf_yasg',
 ]
 
 INSTALLED_APPS = [
