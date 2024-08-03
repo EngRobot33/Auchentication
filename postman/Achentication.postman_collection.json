@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "b9165d18-6a5d-4b58-93fa-d98d050a4e85",
+		"name": "Achentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27377723"
+	},
+	"item": [
+		{
+			"name": "Check Phone Number",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"phone_number\": \"09123456789\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/user/check-phone-number/"
+			},
+			"response": []
+		},
+		{
+			"name": "OTP Verify",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"phone_number\": \"09123456789\",\n    \"otp\": 123456\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/user/otp-verify/"
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNjk2ODQyLCJpYXQiOjE3MjI2OTYyNDIsImp0aSI6IjJiNWI5NTM0MTliYTRlZGU5NmM2NmEyZTQxZTZkOTNjIiwidXNlcl9pZCI6MTB9.71tipkKpJkvI2bcfWL5cmYmDlJPhWl8HdUGn4Xv6_a0"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"johndoe@django.dev\",\n    \"password\": \"@ThisIsMyStrongPassword@\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/user/register/"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"phone_number\": \"09123456789\",\n    \"password\": \"@ThisIsMyStrongPassword@\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/user/login/"
+			},
+			"response": []
+		}
+	]
+}
