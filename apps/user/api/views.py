@@ -19,9 +19,13 @@ class UserCheckPhoneNumberApi(BaseAPIView):
 
         if not is_exist:
             otp_send()
-            return custom_response(data={'link': reverse('user:register')})
+            return custom_response(data={'link': reverse('user:otp-verify')})
 
         return custom_response(data={'link': reverse('user:login')})
+
+
+class UserOTPVerifyApi(BaseAPIView):
+    ...
 
 
 class UserLoginApi(BaseAPIView):
