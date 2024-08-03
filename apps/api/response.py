@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 
-from apps.api.utils.statuses import OK_200
+from apps.api.statuses import OK_200
 
 
 def custom_response(status_code: dict = OK_200, data: dict or list = None, error=None):
