@@ -1,10 +1,10 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework.reverse import reverse
 
+from apps.api.ip_address import IPAddress
 from apps.api.response import custom_response
 from apps.api.statuses import OTP_EXPIRED_400, CREATED_201, UNAUTHORIZED_401, LOGIN_FAILED_403, OK_200, IP_BLOCKED_403
-from apps.api.utils import otp_send, otp_check, generate_token, is_blocked, increment_attempts, block_ip
+from apps.api.utils import otp_send, otp_check, generate_token
 from apps.api.views import BaseAPIView
 from apps.user.api.serializers import PhoneNumberSerializer, OtpVerifySerializer, UserRegisterSerializer, \
     UserSerializer, UserLoginSerializer
@@ -34,19 +34,13 @@ class UserOTPVerifyApi(BaseAPIView):
         serializer, validated_data = self.data_validation()
         phone_number = validated_data['phone_number']
         otp = validated_data['otp']
-        ip_address = request.META.get('REMOTE_ADDR')
-
-        if is_blocked(ip_address, 'otp'):
-            return custom_response(status_code=IP_BLOCKED_403)
 
         if otp_check(phone_number=phone_number, otp=otp):
             user = User.objects.create(phone_number=phone_number, username=phone_number)
             data = {'link': reverse('user:register'), 'tokens': generate_token(user=user)}
             return custom_response(data=data, status_code=CREATED_201)
 
-        attempts = increment_attempts(ip_address, 'otp')
-        if attempts >= settings.OTP_ATTEMPT_LIMIT:
-            block_ip(ip_address, 'otp')
+        IPAddress.attempt(request=request, phone_number=phone_number)
 
         return custom_response(status_code=OTP_EXPIRED_400)
 
@@ -57,23 +51,15 @@ class UserLoginApi(BaseAPIView):
     def post(self, request):
         serializer, validated_data = self.data_validation()
         phone_number = validated_data['phone_number']
-        ip_address = request.META.get('REMOTE_ADDR')
-
-        if is_blocked(ip_address, 'login'):
-            return custom_response(status_code=IP_BLOCKED_403)
 
         try:
             user = User.objects.get(phone_number=phone_number)
         except User.DoesNotExist:
-            attempts = increment_attempts(ip_address, 'login')
-            if attempts >= settings.LOGIN_ATTEMPT_LIMIT:
-                block_ip(ip_address, 'login')
+            IPAddress.attempt(request=request, phone_number=phone_number)
             return custom_response(status_code=LOGIN_FAILED_403)
 
         if not user.check_password(validated_data['password']):
-            attempts = increment_attempts(ip_address, 'login')
-            if attempts >= settings.LOGIN_ATTEMPT_LIMIT:
-                block_ip(ip_address, 'login')
+            IPAddress.attempt(request=request, phone_number=phone_number)
             return custom_response(status_code=LOGIN_FAILED_403)
 
         return custom_response(data=UserSerializer(user).data, status_code=OK_200)

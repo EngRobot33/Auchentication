@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     *THIRD_PARTY_PACKAGES,
 ]
 
+CUSTOM_MIDDLEWARES = [
+    'apps.user.middlewares.IPMiddleware'
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -45,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    *CUSTOM_MIDDLEWARES,
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -118,8 +123,7 @@ CACHES = {
 OTP_EXPIRE_TIME: int = int(os.environ.get('OTP_EXPIRE_TIME', 3600))
 CACHE_KEY_PREFIX: str = os.environ.get('CACHE_KEY_PREFIX', 'user_attempts')
 
-LOGIN_ATTEMPT_LIMIT: int = 3
-OTP_ATTEMPT_LIMIT: int = 3
+MAX_ATTEMPT_NUMBER: int = 3
 BLOCK_DURATION: int = 3600
 
 
