@@ -50,6 +50,12 @@ LOGIN_FAILED_403 = {
     'number': status.HTTP_403_FORBIDDEN
 }
 
+IP_BLOCKED_403 = {
+    'detail': 'IP blocked',
+    'code': 'ip_blocked',
+    'number': status.HTTP_403_FORBIDDEN
+}
+
 # 404
 NOT_FOUND_404 = {
     'detail': 'Not found',

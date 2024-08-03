@@ -116,6 +116,12 @@ CACHES = {
 }
 
 OTP_EXPIRE_TIME: int = int(os.environ.get('OTP_EXPIRE_TIME', 3600))
+CACHE_KEY_PREFIX: str = os.environ.get('CACHE_KEY_PREFIX', 'user_attempts')
+
+LOGIN_ATTEMPT_LIMIT: int = 3
+OTP_ATTEMPT_LIMIT: int = 3
+BLOCK_DURATION: int = 3600
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
