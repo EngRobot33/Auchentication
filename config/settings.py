@@ -101,3 +101,17 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.User'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('CACHES_REDIS_HOST', default='redis://127.0.0.1:6379'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'TIMEOUT': int(os.getenv('REDIS_TIMEOUT', default='3600')),
+        'KEY_PREFIX': os.getenv('REDIS_KEY_PREFIX', default=''),
+    }
+}
+
+OTP_EXPIRE_TIME: int = int(os.environ.get('OTP_EXPIRE_TIME', 3600))
