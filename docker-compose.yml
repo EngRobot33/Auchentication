@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  redis:
+    image: redis:7.0.2-alpine
+    container_name: auchentication-redis
+    restart: unless-stopped
+    env_file:
+      - ./.env
+  web:
+    build: .
+    command: sh -c "python manage.py migrate &&
+      yes | python manage.py collectstatic --no-input &&
+      gunicorn config.wsgi:application --workers=3 --bind 0.0.0.0:8000"
+    container_name: auchentication-web
+
+    volumes:
+      - .:/app
+      - static_volume:/app/static
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    restart: "on-failure"
+
+  nginx:
+    build: ./nginx
+    container_name: auchentication-nginx
+    volumes:
+      - static_volume:/app/static
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    restart: "on-failure"
+
+volumes:
+  static_volume:
