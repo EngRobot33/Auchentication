@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'secret-key-default')
 
-DEBUG = bool(int(os.getenv('DEBUG', 1)))
+DEBUG = bool(os.getenv('DEBUG', 1))
 
 ALLOWED_HOSTS = ['*']
 
@@ -105,6 +105,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
