@@ -31,7 +31,7 @@ services:
     volumes:
       - static_volume:/app/static
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - web
     restart: "on-failure"
